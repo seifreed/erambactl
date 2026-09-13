@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -eu
+
+PYTHON_BIN=${PYTHON:-python3}
+
+"$PYTHON_BIN" -c "import sys; sys.argv[0] = 'eramba-api-smoke'; from erambactl.smoke import main; raise SystemExit(main())" "$@"

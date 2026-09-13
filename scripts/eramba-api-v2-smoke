@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+set -eu
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+PATH_ID=${ERAMBA_PATH_ID:-0}
+PYTHON_BIN=${PYTHON:-python3}
+
+"$PYTHON_BIN" -c "from erambactl.smoke import main; raise SystemExit(main())" \
+  --config "$ROOT_DIR/examples/instances.json" \
+  --all-instances \
+  --all \
+  --group api-v2 \
+  --dry-run \
+  --path-value "id=$PATH_ID" \
+  --summary-only \
+  "$@"

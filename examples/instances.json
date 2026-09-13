@@ -1,0 +1,18 @@
+{
+  "instances": {
+    "local-a": {
+      "base_url": "https://localhost:8443",
+      "username": "admin",
+      "password_env": "ERAMBA_A_PASSWORD",
+      "verify_tls": false,
+      "timeout": 30
+    },
+    "local-b": {
+      "base_url": "https://localhost:9443",
+      "username": "admin",
+      "password_env": "ERAMBA_B_PASSWORD",
+      "verify_tls": false,
+      "timeout": 30
+    }
+  }
+}

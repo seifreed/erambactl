@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+set -eu
+
+DB_NAME=docker
+DB_PASSWORD='Your_DB_user_P@ssw0rd'
+DB_USER=docker
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+SQL_FILE="$ROOT_DIR/scripts/eramba-fill-real-data.sql"
+
+seed() {
+  instance=$1
+  docker exec -i \
+    -e MYSQL_PWD="$DB_PASSWORD" \
+    "erambactl-$instance-mysql" \
+    mysql -u "$DB_USER" "$DB_NAME" < "$SQL_FILE"
+  docker exec "erambactl-$instance-eramba" \
+    sh -lc 'mkdir -p /var/www/eramba/app/upgrade/data/files/uploads && cp /var/www/eramba/app/upgrade/webroot/img/logo.png /var/www/eramba/app/upgrade/data/files/uploads/erambactl-real-logo.png && chown -R www-data:www-data /var/www/eramba/app/upgrade/logs /var/www/eramba/app/upgrade/data/files/uploads'
+  docker exec "erambactl-$instance-eramba" \
+    sh -lc 'cd /var/www/eramba/app/upgrade && bin/cake access_control sync --quiet'
+}
+
+seed a
+seed b

@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling==1.32.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "erambactl"
+version = "0.1.0"
+description = "CLI and Python client for eramba API."
+readme = "README.md"
+requires-python = "==3.14.*"
+license = "MIT"
+authors = [{ name = "Seif Reed" }]
+keywords = ["eramba", "cli", "api", "compliance", "grc"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Information Technology",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Security",
+  "Topic :: Utilities",
+]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/seifreed/erambactl"
+
+[project.optional-dependencies]
+dev = [
+  "bandit==1.9.4",
+  "black==26.5.1",
+  "build==1.6.1",
+  "hatchling==1.32.0",
+  "mypy==2.3.1",
+  "pip-audit==2.10.1",
+  "pytest==9.1.1",
+  "pytest-cov==7.1.0",
+  "ruff==0.16.7",
+]
+
+[project.scripts]
+erambactl = "erambactl.cli:main"
+erambactl-route-data = "erambactl.route_parser:main"
+erambactl-seed = "erambactl.seed:main"
+erambactl-smoke = "erambactl.smoke:main"
+erambactl-real-cli-check = "erambactl.real_cli_check:main"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+
+[tool.pytest.ini_options]
+addopts = "--cov=erambactl --cov-report=term-missing --cov-fail-under=100"
+testpaths = ["tests"]

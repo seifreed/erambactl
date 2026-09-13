@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -eu
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+PYTHON_BIN=${PYTHON:-python3}
+
+"$PYTHON_BIN" -c "from erambactl.real_cli_check import main; raise SystemExit(main())" \
+  --config "$ROOT_DIR/examples/instances.json" \
+  "$@"

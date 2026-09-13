@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+set -eu
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/erambactl-package.XXXXXX")
+PYTHON_BIN=${PYTHON:-python3}
+
+cleanup() {
+  rm -rf "$WORK_DIR"
+}
+trap cleanup EXIT INT TERM
+
+DIST_DIR="$WORK_DIR/dist"
+VENV_DIR="$WORK_DIR/venv"
+
+"$PYTHON_BIN" -m pip wheel --no-deps --no-build-isolation --wheel-dir "$DIST_DIR" "$ROOT_DIR"
+"$PYTHON_BIN" -m venv "$VENV_DIR"
+"$VENV_DIR/bin/python" -m pip install "$DIST_DIR"/erambactl-*.whl
+"$VENV_DIR/bin/python" -c "from erambactl import ErambaFleet, ErambaInstance, find_commands, get_command; command = get_command('get-assets-index', group='api-v2'); assert len(find_commands(group='api-v2')) == 209; assert command.path == '/laravel/api/assets/index'; assert ErambaFleet((ErambaInstance(name='local-a', base_url='https://localhost', token='x'),)).names() == ('local-a',); assert ErambaFleet(()).request_all('GET', '/x') == {}; assert ErambaFleet(()).run_all(command) == {}"
+"$VENV_DIR/bin/erambactl" commands --group api-v2 >/dev/null
+"$VENV_DIR/bin/erambactl-seed" --help >/dev/null
+"$VENV_DIR/bin/erambactl-smoke" --help >/dev/null
+"$VENV_DIR/bin/erambactl-real-cli-check" --help >/dev/null
+"$VENV_DIR/bin/erambactl-route-data" --help >/dev/null
+printf '%s\n' "package check passed"

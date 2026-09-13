@@ -1,0 +1,13 @@
+{
+  "commands": [
+    {
+      "group": "api-v2",
+      "action": "post-filters",
+      "body": {
+        "name": "erambactl seed assets",
+        "model": "Assets",
+        "params": "{\"select\":{\"name\":{\"display\":\"default\",\"frozen\":false,\"wrap\":\"truncate\"}},\"sort\":{\"created\":\"desc\"}}"
+      }
+    }
+  ]
+}

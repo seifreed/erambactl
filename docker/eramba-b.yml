@@ -1,0 +1,22 @@
+services:
+  cron:
+    image: ghcr.io/eramba/eramba:latest@sha256:7b246fca86bcfee04780fa34f3a5937e6f0ca2949519f77cf728c9865a9f4d5f
+    container_name: erambactl-b-cron
+  mysql:
+    container_name: erambactl-b-mysql
+  redis:
+    container_name: erambactl-b-redis
+  eramba:
+    image: ghcr.io/eramba/eramba:latest@sha256:7b246fca86bcfee04780fa34f3a5937e6f0ca2949519f77cf728c9865a9f4d5f
+    container_name: erambactl-b-eramba
+  triggers_caddy:
+    image: ghcr.io/eramba/eramba-triggers:latest@sha256:a013869633a23cd81faa6b9cdb1d7c38ff8a9b04a4567d8e11d93c837c507595
+    container_name: erambactl-b-triggers-caddy
+  mcp_server:
+    image: ghcr.io/eramba/eramba-mcp-server:latest@sha256:9781cdaec837fe76c46288a7ff31c5ede16500992d0a8ec74d80b14fdfbb485b
+    container_name: erambactl-b-mcp-server
+  public_proxy:
+    container_name: erambactl-b-public-proxy
+    restart: always
+    ports: !override
+      - 127.0.0.1:9443:443

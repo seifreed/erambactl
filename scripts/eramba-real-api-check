@@ -1,0 +1,60 @@
+#!/usr/bin/env sh
+set -eu
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+failures=0
+
+run_check() {
+  if ! "$ROOT_DIR/scripts/eramba-real-cli-check" "$@"; then
+    failures=1
+  fi
+}
+
+"$ROOT_DIR/scripts/eramba-lab" bootstrap
+"$ROOT_DIR/scripts/eramba-fill-real-data"
+"$ROOT_DIR/scripts/eramba-seed-data" --all-instances
+run_check \
+  --all-instances \
+  --group api-v2 \
+  --skip-method delete \
+  --skip-action get-settings-activate-license \
+  --skip-action get-filters-id-timestamp \
+  --skip-action post-settings-reset-application-id \
+  --skip-action post-settings-reset-database \
+  --request-timeout 5 \
+  --real-values \
+  --strict-http
+run_check \
+  --all-instances \
+  --group api-v2 \
+  --action get-settings-activate-license \
+  --request-timeout 5 \
+  --real-values
+run_check \
+  --all-instances \
+  --group api-v2 \
+  --action get-filters-id-timestamp \
+  --request-timeout 5 \
+  --real-values
+run_check \
+  --all-instances \
+  --group api-v2 \
+  --method delete \
+  --request-timeout 5 \
+  --real-values \
+  --strict-http
+run_check \
+  --all-instances \
+  --group api-v2 \
+  --action post-settings-reset-application-id \
+  --request-timeout 60 \
+  --real-values \
+  --strict-http
+run_check \
+  --all-instances \
+  --group api-v2 \
+  --action post-settings-reset-database \
+  --request-timeout 60 \
+  --real-values \
+  --strict-http
+exit "$failures"

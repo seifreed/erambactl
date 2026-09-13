@@ -1,0 +1,56 @@
+#!/usr/bin/env sh
+set -eu
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+UPSTREAM_DIR="$ROOT_DIR/.eramba-docker-src"
+BASE_FILE="$UPSTREAM_DIR/docker-compose.simple-install.yml"
+DB_NAME=docker
+DB_PASSWORD='Your_DB_user_P@ssw0rd'
+DB_USER=docker
+
+if [ ! -d "$UPSTREAM_DIR/.git" ]; then
+  git clone --depth 1 https://github.com/eramba/docker.git "$UPSTREAM_DIR"
+fi
+
+compose() {
+  instance=$1
+  shift
+  docker compose \
+    --project-directory "$UPSTREAM_DIR" \
+    --project-name "erambactl-$instance" \
+    --env-file "$ROOT_DIR/docker/eramba-$instance.env" \
+    -f "$BASE_FILE" \
+    -f "$ROOT_DIR/docker/eramba-$instance.yml" \
+    "$@"
+}
+
+bootstrap() {
+  instance=$1
+  docker exec \
+    -e MYSQL_PWD="$DB_PASSWORD" \
+    "erambactl-$instance-mysql" \
+    mysql -u "$DB_USER" "$DB_NAME" \
+    -e "UPDATE users SET api_allow = 1 WHERE login = 'admin'; SELECT id, login, api_allow FROM users WHERE login = 'admin';"
+}
+
+command=${1:-ps}
+shift || true
+
+case "$command" in
+  up)
+    compose a up -d "$@"
+    compose b up -d "$@"
+    ;;
+  down)
+    compose b down "$@"
+    compose a down "$@"
+    ;;
+  bootstrap)
+    bootstrap a
+    bootstrap b
+    ;;
+  *)
+    compose a "$command" "$@"
+    compose b "$command" "$@"
+    ;;
+esac
