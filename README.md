@@ -5,7 +5,7 @@
 <h1 align="center">erambactl</h1>
 
 <p align="center">
-  <strong>Python 3.14 CLI and library for explicit eramba API automation</strong>
+  <strong>Command-line access to eramba's API, with multi-instance support</strong>
 </p>
 
 <p align="center">
@@ -28,35 +28,35 @@
 ## Overview
 
 **erambactl** is a Python 3.14 command-line tool and library for automating
-eramba API workflows. It provides checked-in command catalogs for eramba API
-routes, including API v2, without using OpenAPI at runtime.
+eramba through its HTTP API. It ships with a checked-in catalog of eramba API
+routes, including API v2, and does not depend on OpenAPI at runtime.
 
-The CLI can execute one operation against one eramba instance or fan the same
-operation out across a configured fleet, which makes it useful for compliance
-labs, regression checks, and repeatable administration tasks.
+Use it against one eramba instance, or run the same command across several
+configured instances for lab work, regression checks, and repeatable admin
+tasks.
 
 ### Key Features
 
 | Feature | Description |
 |---------|-------------|
-| **Explicit Commands** | One CLI command per checked-in eramba route catalog entry |
+| **Route Commands** | One CLI command per checked-in eramba route catalog entry |
 | **API v2 Catalog** | 209 `api-v2` commands with documented methods, paths, and flags |
 | **Full API Catalog** | 1592 total commands across legacy `api` and `api-v2` groups |
-| **No Runtime OpenAPI** | Command execution uses local static metadata, not a live OpenAPI schema |
+| **No Runtime OpenAPI** | Commands use the local catalog, not a live OpenAPI schema |
 | **Multi-instance** | Run login, API, seed, smoke, and real CLI checks against one or all instances |
 | **Auth Modes** | Bearer token, web session login, Cookie support, and HTTP Basic header mode |
 | **Payload Support** | Query params, JSON bodies, raw files, forms, uploads, headers, and dry-run |
 | **Local Lab** | Two-instance Docker lab based on eramba's official Docker deployment |
-| **CLI + Library** | Use as terminal commands or import as a Python package |
+| **CLI + Library** | Use it from a shell or import it as a Python package |
 
-### Supported Workflows
+### What It Covers
 
 ```text
 Commands        api, api-v2, login, commands
 Inputs          path params, query params, JSON, files, forms, uploads
 Auth            bearer, session login, basic, cookie
 Instances       single instance, named instance, all instances
-Verification    smoke checks, real CLI checks, route catalog checks
+Checks          smoke checks, real CLI checks, route catalog checks
 Packaging       wheel build and installed-console-script verification
 ```
 
@@ -111,7 +111,7 @@ erambactl commands --group api-v2
 # Run an API v2 command against one instance
 erambactl --config examples/instances.json --instance local-a api-v2 get-assets-index
 
-# Run an API command across all configured instances
+# Run a command across all configured instances
 erambactl --config examples/instances.json --all-instances api get-assets-index
 
 # Send query params and eramba's dry-run header
@@ -141,13 +141,13 @@ erambactl --config examples/instances.json --instance local-a api-v2 put-assets-
 erambactl --config examples/instances.json --instance local-a api post-attachments-store-form-create Assets file --form name=Evidence --file attachment=evidence.pdf
 ```
 
-### Available Options (Main Commands)
+### Commands
 
 | Command | Description |
 |---------|-------------|
 | `erambactl login` | Authenticate and print the session result |
-| `erambactl api <command>` | Run an explicit eramba API command |
-| `erambactl api-v2 <command>` | Run an explicit eramba API v2 command |
+| `erambactl api <command>` | Run an eramba API command |
+| `erambactl api-v2 <command>` | Run an eramba API v2 command |
 | `erambactl commands` | Print or filter the static command catalog |
 | `erambactl-route-data` | Parse Laravel routes and verify the route catalog |
 | `erambactl-seed` | Execute JSON seed fixtures against eramba |
@@ -167,8 +167,8 @@ erambactl --config examples/instances.json --instance local-a api post-attachmen
 | `--dry-run` | Send eramba's Swagger dry-run header |
 
 Path parameters can be passed positionally or with endpoint-specific flags such
-as `--id`. Body-capable API v2 commands accept generic payload flags; commands
-with known body fields can also build JSON from endpoint-specific field flags.
+as `--id`. API v2 commands with a request body accept the generic payload flags
+above; commands with known body fields can also build JSON from field flags.
 
 ### API v2 Coverage
 
@@ -189,7 +189,7 @@ command reference.
 
 ## Local eramba Lab
 
-The repository includes a two-instance lab for multi-instance testing:
+The repository includes a two-instance lab for testing multi-instance runs:
 
 ```text
 local-a  https://localhost:8443
@@ -210,8 +210,9 @@ scripts\eramba-lab.cmd ps
 scripts\eramba-lab.cmd down
 ```
 
-The lab uses `https://github.com/eramba/docker` as the upstream source. Project
-overrides bind public ports to `127.0.0.1` and pin eramba lab images by digest.
+The lab uses `https://github.com/eramba/docker` as the upstream source. The
+project overrides bind public ports to `127.0.0.1` and pin eramba lab images by
+digest.
 
 ---
 
@@ -229,8 +230,7 @@ scripts\eramba-seed-data.cmd --all-instances
 ```
 
 Seed fixtures are JSON command lists executed through the real erambactl client
-against one or every configured eramba instance. They do not use mock clients or
-OpenAPI.
+against one or every configured eramba instance. No mock clients, no OpenAPI.
 
 ### Smoke Checks
 
@@ -448,5 +448,5 @@ This project is licensed under the MIT license. See [pyproject.toml](pyproject.t
 ---
 
 <p align="center">
-  <sub>Built for practical eramba API automation and multi-instance compliance testing</sub>
+  <sub>Made for eramba API checks, lab setup, and day-to-day automation</sub>
 </p>
