@@ -9,7 +9,7 @@ description = "CLI and Python client for eramba API."
 readme = "README.md"
 requires-python = "==3.14.*"
 license = "MIT"
-authors = [{ name = "Seif Reed" }]
+authors = [{ name = "Marc Rivero" }]
 keywords = ["eramba", "cli", "api", "compliance", "grc"]
 classifiers = [
   "Development Status :: 3 - Alpha",

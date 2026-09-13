@@ -442,7 +442,7 @@ This project is licensed under the MIT license. See [pyproject.toml](pyproject.t
 
 **Attribution**
 
-- Author: **Seif Reed** | [@seifreed](https://github.com/seifreed)
+- Author: **Marc Rivero** | [@seifreed](https://github.com/seifreed)
 - Repository: [github.com/seifreed/erambactl](https://github.com/seifreed/erambactl)
 
 ---
