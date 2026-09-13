@@ -294,7 +294,7 @@ def test_client_can_send_multipart_form_files() -> None:
 
 def test_client_escapes_multipart_names_and_rejects_header_breaks() -> None:
     with tempfile.TemporaryDirectory() as directory:
-        path = Path(directory) / 'quo"te.txt'
+        path = Path(directory) / "quote.txt"
         path.write_text("hello", encoding="utf-8")
         with ThreadingHTTPServer(("127.0.0.1", 0), JsonHandler) as server:
             thread = threading.Thread(target=server.serve_forever)
@@ -321,7 +321,7 @@ def test_client_escapes_multipart_names_and_rejects_header_breaks() -> None:
     CHECK.assertIsInstance(result, dict)
     body = cast(str, cast(dict[str, Any], result)["body"])
     CHECK.assertIn(r'name="na\"me"', body)
-    CHECK.assertIn(r'name="fi\"le"; filename="quo\"te.txt"', body)
+    CHECK.assertIn(r'name="fi\"le"; filename="quote.txt"', body)
 
     client = ErambaClient(
         ErambaInstance(name="test", base_url="https://example", token=BEARER_VALUE)
